@@ -1,17 +1,16 @@
 package io.metersphere.security;
 
 import io.metersphere.commons.constants.SessionConstants;
-import io.metersphere.commons.utils.LogUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.web.filter.authc.AnonymousFilter;
 import org.apache.shiro.web.util.WebUtils;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class ApiKeyFilter extends AnonymousFilter {
 
