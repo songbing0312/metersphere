@@ -496,6 +496,11 @@ export default {
     }
     this.getVersionOptions();
     this.checkVersionEnable();
+    window.addEventListener("storage", e => {
+      if (e.key === "caseID") {
+        this.initTable();
+      }
+    })
   },
   watch: {
     selectNodeIds() {
@@ -810,7 +815,7 @@ export default {
       });
     },
     handleTestCase(testCase) {
-      this.$get('/api/definition/get/' + testCase.apiDefinitionId, (response) => {
+      /*this.$get('/api/definition/get/' + testCase.apiDefinitionId, (response) => {
         let api = response.data;
         let selectApi = api;
         let request = {};
@@ -826,7 +831,8 @@ export default {
         if (this.$refs.caseList) {
           this.$refs.caseList.open(selectApi, testCase.id);
         }
-      });
+      });*/
+      window.open('/caseEdit?caseId='+testCase.id, '_blank');
     },
     addTestCase() {
       this.$get('/api/definition/get/' + this.apiDefinitionId, (response) => {

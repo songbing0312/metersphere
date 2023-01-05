@@ -275,6 +275,10 @@ export default {
         data.id = response.data.id;
         data.remark = response.data.remark;
         this.$emit('saveApi', data);
+        setTimeout(function () {
+          localStorage.setItem("apiID", new Date().getMilliseconds());
+          window.close();
+        }, 500);
       });
       this.$store.state.apiMap.delete(this.currentApi.id);
       this.responseCount = 0;

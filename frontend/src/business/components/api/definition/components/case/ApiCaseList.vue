@@ -1,6 +1,6 @@
 <template>
-  <div v-if="visible">
-    <ms-drawer :size="60" @close="apiCaseClose" direction="bottom" ref="testCaseDrawer">
+  <div >
+    <ms-drawer :size="100" @close="apiCaseClose" direction="bottom" ref="testCaseDrawer">
       <template v-slot:header>
         <api-case-header
           :api="api"
@@ -15,7 +15,7 @@
           ref="header"/>
       </template>
 
-      <el-container v-if="!result.loading">
+      <el-container >
         <el-main>
           <api-case-item
             :loading="singleLoading && singleRunId === apiCaseList[0].id || batchLoadingIds.indexOf(apiCaseList[0].id) > -1"
@@ -64,6 +64,7 @@ export default {
   },
   props: {
     createCase: String,
+    caseId: String,
     loaded: {
       type: Boolean,
       default: false
@@ -109,14 +110,43 @@ export default {
     },
   },
   created() {
-    this.api = this.currentApi;
-    if (this.createCase) {
-      this.sysAddition();
+    //如果是以新窗口方式，打开case编辑页面
+
+    if(this.caseId){
+      this.result = this.$get("/api/testcase/findById/" + this.caseId, response => {
+        let apiCase = response.data;
+        this.$get('/api/definition/get/' + apiCase.apiDefinitionId, (response) => {
+          this.api = response.data;
+          if (this.createCase) {
+            this.sysAddition();
+          }
+          if (!this.environment && this.$store.state.useEnvironment) {
+            this.environment = this.$store.state.useEnvironment;
+          }
+          this.getMaintainerOptions();
+
+          // testCaseId 不为空则为用例编辑页面
+          this.testCaseId = this.caseId;
+          this.condition = {components: API_CASE_CONFIGS};
+          this.getApiTest(true,true);
+          this.visible = true;
+          this.$store.state.currentApiCase = undefined;
+
+        });
+      });
+      //否则，按原来方式打开case编辑页面
+    }else {
+      this.api = this.currentApi;
+
+      if (this.createCase) {
+        this.sysAddition();
+      }
+      if (!this.environment && this.$store.state.useEnvironment) {
+        this.environment = this.$store.state.useEnvironment;
+      }
+      this.getMaintainerOptions();
     }
-    if (!this.environment && this.$store.state.useEnvironment) {
-      this.environment = this.$store.state.useEnvironment;
-    }
-    this.getMaintainerOptions();
+
   },
   computed: {
     isCaseEdit() {

@@ -487,6 +487,82 @@ export function getShareId() {
   return "";
 }
 
+export function getScenarioId() {
+  //let herfUrl = 'http://localhost:8080/scenario-test?scenarioId=bf9496ac-8577-46b4-adf9-9c7e93dd06a8';
+  let herfUrl = window.location.href;
+  if (herfUrl.indexOf('scenarioId=') > -1) {
+    let scenarioId = '';
+    new URL(herfUrl).searchParams.forEach((value, key) => {
+      if (key === 'scenarioId') {
+        scenarioId = value;
+      }
+    });
+    return scenarioId;
+  } else {
+    if (herfUrl.indexOf("?") > 0) {
+      let paramArr = herfUrl.split("?");
+      if (paramArr.length > 1) {
+        let scenarioId = paramArr[1];
+        if (scenarioId.indexOf("#") > 0) {
+          scenarioId = scenarioId.split("#")[0];
+        }
+        return scenarioId;
+      }
+    }
+  }
+  return "";
+}
+
+export function getCaseId() {
+  let herfUrl = window.location.href;
+  if (herfUrl.indexOf('caseId=') > -1) {
+    let caseId = '';
+    new URL(herfUrl).searchParams.forEach((value, key) => {
+      if (key === 'caseId') {
+        caseId = value;
+      }
+    });
+    return caseId;
+  } else {
+    if (herfUrl.indexOf("?") > 0) {
+      let paramArr = herfUrl.split("?");
+      if (paramArr.length > 1) {
+        let caseId = paramArr[1];
+        if (caseId.indexOf("#") > 0) {
+          caseId = caseId.split("#")[0];
+        }
+        return caseId;
+      }
+    }
+  }
+  return "";
+}
+
+export function getApiId() {
+  let herfUrl = window.location.href;
+  if (herfUrl.indexOf('apiId=') > -1) {
+    let apiId = '';
+    new URL(herfUrl).searchParams.forEach((value, key) => {
+      if (key === 'apiId') {
+        apiId = value;
+      }
+    });
+    return apiId;
+  } else {
+    if (herfUrl.indexOf("?") > 0) {
+      let paramArr = herfUrl.split("?");
+      if (paramArr.length > 1) {
+        let apiId = paramArr[1];
+        if (apiId.indexOf("#") > 0) {
+          apiId = apiId.split("#")[0];
+        }
+        return apiId;
+      }
+    }
+  }
+  return "";
+}
+
 export function setCurTabId(vueObj, tab, ref) {
   vueObj.$nextTick(() => {
     if (vueObj.$refs && vueObj.$refs[ref]) {

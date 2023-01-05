@@ -4,6 +4,9 @@ import io.metersphere.api.dto.definition.ApiModuleDTO;
 import io.metersphere.api.dto.definition.DragModuleRequest;
 import io.metersphere.api.service.ApiModuleService;
 import io.metersphere.base.domain.ApiModule;
+import io.metersphere.base.domain.ApiScenarioModule;
+import io.metersphere.base.mapper.ApiModuleMapper;
+import io.metersphere.base.mapper.ApiScenarioModuleMapper;
 import io.metersphere.commons.constants.OperLogConstants;
 import io.metersphere.commons.constants.OperLogModule;
 import io.metersphere.commons.utils.ApiDefinitionDefaultApiTypeUtil;
@@ -13,6 +16,7 @@ import io.metersphere.service.CheckPermissionService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping("/api/module")
@@ -23,12 +27,21 @@ public class ApiModuleController {
     ApiModuleService apiModuleService;
     @Resource
     private CheckPermissionService checkPermissionService;
+    @Resource
+    ApiModuleMapper apiModuleMapper;
 
     @GetMapping("/list/{projectId}/{protocol}")
     public List<ApiModuleDTO> getNodeByProjectId(@PathVariable String projectId, @PathVariable String protocol) {
         String userId = SessionUtils.getUserId();
         ApiDefinitionDefaultApiTypeUtil.addUserSelectApiType(userId, protocol);
         return apiModuleService.getNodeTreeByProjectId(projectId, protocol, null);
+    }
+
+    @GetMapping("/getApiModuleById/{moduleId}")
+    public List<ApiModule> getApiModuleById(@PathVariable String moduleId) {
+        List<ApiModule> apiModules = new ArrayList<>();
+        apiModules.add(apiModuleMapper.selectByPrimaryKey(moduleId));
+        return apiModules;
     }
 
     @GetMapping("/list/{projectId}/{protocol}/{versionId}")

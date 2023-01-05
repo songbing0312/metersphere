@@ -4,6 +4,7 @@ import io.metersphere.api.dto.automation.ApiScenarioModuleDTO;
 import io.metersphere.api.dto.automation.DragApiScenarioModuleRequest;
 import io.metersphere.api.service.ApiScenarioModuleService;
 import io.metersphere.base.domain.ApiScenarioModule;
+import io.metersphere.base.mapper.ApiScenarioModuleMapper;
 import io.metersphere.commons.constants.OperLogConstants;
 import io.metersphere.commons.constants.OperLogModule;
 import io.metersphere.log.annotation.MsAuditLog;
@@ -11,6 +12,7 @@ import io.metersphere.service.CheckPermissionService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping("/api/automation/module")
@@ -21,11 +23,20 @@ public class ApiScenarioModuleController {
     ApiScenarioModuleService apiScenarioModuleService;
     @Resource
     private CheckPermissionService checkPermissionService;
+    @Resource
+    ApiScenarioModuleMapper apiScenarioModuleMapper;
 
     @GetMapping("/list/{projectId}")
     public List<ApiScenarioModuleDTO> getNodeByProjectId(@PathVariable String projectId) {
         checkPermissionService.checkProjectOwner(projectId);
         return apiScenarioModuleService.getNodeTreeByProjectId(projectId);
+    }
+
+    @GetMapping("/getApiScenarioModuleById/{moduleId}")
+    public List<ApiScenarioModule> getApiScenarioModuleById(@PathVariable String moduleId) {
+        List<ApiScenarioModule> apiScenarioModules = new ArrayList<>();
+        apiScenarioModules.add(apiScenarioModuleMapper.selectByPrimaryKey(moduleId));
+        return apiScenarioModules;
     }
 
     @PostMapping("/add")

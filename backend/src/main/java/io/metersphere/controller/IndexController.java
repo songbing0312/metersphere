@@ -51,4 +51,20 @@ public class IndexController {
     public String shareApiRedirect() {
         return "share-api-report.html";
     }
+
+    @GetMapping(value = "/scenario-test")
+    public String scenarioTest() {
+        return "scenario-test.html";
+    }
+
+    @GetMapping(value = "/caseEdit")
+    public String caseEdit() {
+        return "case-edit.html";
+    }
+
+    @GetMapping(value = "/apiEdit")
+    public String apiEdit() {
+        return "api-edit.html";
+    }
+
 }

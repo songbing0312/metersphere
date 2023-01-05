@@ -616,6 +616,11 @@ export default {
     } else {
       this.checkVersionEnable(this.projectId);
     }
+    window.addEventListener("storage", e => {
+      if (e.key === "scenarioID") {
+        this.search();
+      }
+    })
 
     // 通知过来的数据跳转到编辑
     if (this.$route.query.resourceId) {
@@ -943,8 +948,9 @@ export default {
       });
     },
     edit(row) {
-      let data = JSON.parse(JSON.stringify(row));
-      this.$emit('edit', data);
+      //let data = JSON.parse(JSON.stringify(row));
+      //this.$emit('edit', data);
+      window.open('/scenario-test?scenarioId='+row.id, '_blank');
     },
     reductionApi(row) {
       this.$post("/api/automation/reduction", [row.id], response => {

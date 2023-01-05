@@ -403,6 +403,7 @@ export default {
     moduleOptions: Array,
     currentScenario: {},
     type: String,
+    scenarioId: String,
     customNum: {
       type: Boolean,
       default: false
@@ -559,24 +560,58 @@ export default {
     }
   },
   created() {
-    if (!this.currentScenario.apiScenarioModuleId) {
-      this.currentScenario.apiScenarioModuleId = "";
+    //如果是以新窗口方式，打开场景编辑页面
+    if(this.scenarioId){
+      this.$get('/api/automation/getApiScenario/' + this.scenarioId, (response) => {
+        this.currentScenario = response.data;
+        this.$get('/api/automation/module/getApiScenarioModuleById/' + this.currentScenario.apiScenarioModuleId, (response2) => {
+          this.moduleOptions = response2.data;
+        });
+
+        //以下是EditApiScenario.vue原始代码
+        if (!this.currentScenario.apiScenarioModuleId) {
+          this.currentScenario.apiScenarioModuleId = "";
+        }
+        if (this.currentScenario.apiScenarioModuleId === 'default-module') {
+          this.currentScenario.apiScenarioModuleId = this.moduleOptions[0].id;
+        }
+        this.debug = false;
+        this.debugLoading = false;
+        if (this.stepFilter) {
+          this.operatingElements = this.stepFilter.get("ALL");
+        }
+        this.getWsProjects();
+        this.getMaintainerOptions();
+        this.getApiScenario();
+        this.buttonData = buttons(this);
+        this.getPlugins().then(() => {
+          this.initPlugins();
+        });
+      });
+      //如果是以tab页方式，打开场景编辑页面
+    }else{
+      //以下是EditApiScenario.vue原始代码，同上
+      if (!this.currentScenario.apiScenarioModuleId) {
+        this.currentScenario.apiScenarioModuleId = "";
+      }
+      if (this.currentScenario.apiScenarioModuleId === 'default-module') {
+        this.currentScenario.apiScenarioModuleId = this.moduleOptions[0].id;
+      }
+      this.debug = false;
+      this.debugLoading = false;
+      if (this.stepFilter) {
+        this.operatingElements = this.stepFilter.get("ALL");
+      }
+      this.getWsProjects();
+      this.getMaintainerOptions();
+      this.getApiScenario();
+      this.buttonData = buttons(this);
+      this.getPlugins().then(() => {
+        this.initPlugins();
+      });
     }
-    if (this.currentScenario.apiScenarioModuleId === 'default-module') {
-      this.currentScenario.apiScenarioModuleId = this.moduleOptions[0].id;
-    }
-    this.debug = false;
-    this.debugLoading = false;
-    if (this.stepFilter) {
-      this.operatingElements = this.stepFilter.get("ALL");
-    }
-    this.getWsProjects();
-    this.getMaintainerOptions();
-    this.getApiScenario();
-    this.buttonData = buttons(this);
-    this.getPlugins().then(() => {
-      this.initPlugins();
-    });
+
+
 
     if (hasLicense()) {
       this.getVersionHistory();
@@ -1514,6 +1549,10 @@ export default {
                 }
                 this.pluginDelStep = false;
                 this.$emit('refresh', this.currentScenario);
+                setTimeout(function () {
+                  localStorage.setItem("scenarioID", new Date().getMilliseconds());
+                  window.close();
+                }, 500);
                 resolve();
               });
             }

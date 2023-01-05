@@ -58,7 +58,22 @@ module.exports = {
       entry: "src/template/report/plan/plan-report.js",
       template: "src/template/report/plan/plan-report.html",
       filename: "plan-report.html",
-    }
+    },
+    scenarioTest: {
+      entry: "src/template/scenario/scenario-test.js",
+      template: "src/template/scenario/scenario-test.html",
+      filename: "scenario-test.html",
+    },
+    caseEdit: {
+      entry: "src/template/caseedit/case-edit.js",
+      template: "src/template/caseedit/case-edit.html",
+      filename: "case-edit.html",
+    },
+    apiEdit: {
+      entry: "src/template/apiedit/api-edit.js",
+      template: "src/template/apiedit/api-edit.html",
+      filename: "api-edit.html",
+    },
   },
   configureWebpack: {
     devtool: 'source-map',

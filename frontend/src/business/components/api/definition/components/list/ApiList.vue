@@ -504,6 +504,12 @@ export default {
     this.getVersionOptions();
     this.checkVersionEnable();
 
+    window.addEventListener("storage", e => {
+      if (e.key === "apiID") {
+        this.initTable();
+      }
+    })
+
 
     // 通知过来的数据跳转到编辑
     if (this.$route.query.resourceId) {
@@ -680,7 +686,8 @@ export default {
     },
 
     editApi(row) {
-      this.$emit('editApi', row);
+      //this.$emit('editApi', row);
+      window.open('/apiEdit?apiId='+row.id, '_blank');
     },
     handleCopy(row) {
       let obj = JSON.parse(JSON.stringify(row));

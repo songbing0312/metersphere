@@ -84,6 +84,7 @@
       <mock-tab :base-mock-config-data="baseMockConfigData" @redirectToTest="redirectToTest" :version-name="currentApi.versionName"
                 :is-tcp="currentProtocol === 'TCP'"/>
     </div>
+
     <div v-if="showTestCaseList">
       <!--测试用例列表-->
       <api-case-simple-list
@@ -154,6 +155,7 @@ export default {
       default: true
     },
     currentApi: {},
+    apiId: String,
     moduleOptions: {},
     currentProtocol: String,
     syncTabs: Array,
@@ -392,16 +394,16 @@ export default {
 <style scoped>
 .active {
   border: solid 1px #6d317c !important;
-  background-color: var(--primary_color) !important;
+  background-color: #783887 !important;
   color: #FFFFFF !important;
 }
 
 .case-button {
-  border-left: solid 1px var(--primary_color);
+  border-left: solid 1px #783887;
 }
 
 .item {
-  border: solid 1px var(--primary_color);
+  border: solid 1px #783887;
 }
 
 

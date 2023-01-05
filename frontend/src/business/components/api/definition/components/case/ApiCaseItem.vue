@@ -27,7 +27,7 @@
           </div>
         </el-col>
         <el-col :span="2">
-          <el-select size="mini" v-model="apiCase.priority" class="ms-api-select" @change="changePriority(apiCase)" :disabled="loaded">
+          <el-select size="mini" v-model="apiCase.priority" class="ms-api-select"  :disabled="loaded">
             <el-option v-for="grd in priorities" :key="grd.id" :label="grd.name" :value="grd.id"/>
           </el-select>
         </el-col>
@@ -45,7 +45,7 @@
         <el-col :span="5">
           <el-row>
             <el-col :span="8">
-              <el-select size="small" v-model="apiCase.caseStatus" style="margin-right: 5px" @change="saveTestCase(apiCase,true)" :disabled="loaded">
+              <el-select size="small" v-model="apiCase.caseStatus" style="margin-right: 5px"  :disabled="loaded">
                 <el-option v-for="item in options" :key="item.id" :label="$t(item.label)" :value="item.id"/>
               </el-select>
             </el-col>
@@ -459,7 +459,11 @@ export default {
           this.isSave = false;
           // 刷新编辑后用例列表
           if (this.api.source === "editCase") {
-            this.$emit('reLoadCase');
+            //this.$emit('reLoadCase');
+            setTimeout(function () {
+              localStorage.setItem("caseID", new Date().getMilliseconds());
+              window.close();
+            }, 500);
           }
           if (!hideAlert) {
             this.$emit('refresh');
