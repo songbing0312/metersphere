@@ -8,6 +8,7 @@
     :moduleOptions="moduleOptions"
     :activeDom="activeTab"
     ref="apiConfig"
+    v-if="isShow"
   />
 </template>
 
@@ -29,6 +30,7 @@
         moduleOptions:[],
         syncTabs: [],
         activeTab: String,
+        isShow:true
       };
     },
     created() {
@@ -39,25 +41,22 @@
         this.currentApi = response.data;
         this.$get('/api/module/getApiModuleById/' + this.currentApi.moduleId, (response2) => {
           this.moduleOptions = response2.data;
-
           this.currentProtocol = response.data.protocol;
           this.projectId = response.data.projectId;
           this.activeTab = "api";
-
           this.currentApi.request = JSON.parse(this.currentApi.request);
-
-          console.log("ApiEditTemplate>>>>>created>>>>>>")
-          console.log(this.apiId)
-          console.log(this.currentApi)
-          console.log(this.currentProtocol)
-          console.log(this.projectId)
-          console.log(this.moduleOptions)
-          console.log(this.activeTab)
-
+          this.reload();
         });
-
       });
     },
+    methods:{
+      reload() {
+        this.isShow = false
+        this.$nextTick(() => {
+          this.isShow = true
+        })
+      },
+    }
   };
 </script>
 
