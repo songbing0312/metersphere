@@ -41,6 +41,9 @@ function apiReportUse(id, template) {
   Vue.use(ajax);
   Vue.use(Popover);
 
+  // 添加全局事件总线
+  Vue.prototype.$EventBus = new Vue();
+
   new Vue({
     el: id,
     store,

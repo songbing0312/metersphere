@@ -44,6 +44,7 @@ public class ShiroUtils {
         filterChainDefinitionMap.put("/project_application/get/config/**", "anon");
         filterChainDefinitionMap.put("/custom/func/list/**", "anon");
         filterChainDefinitionMap.put("/api/automation/list/**", "anon");
+        filterChainDefinitionMap.put("/project/get/**", "anon");
 
 
         filterChainDefinitionMap.put("/caseEdit", "anon");
