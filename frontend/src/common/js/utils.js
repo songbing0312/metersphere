@@ -513,6 +513,35 @@ export function getScenarioId() {
   return "";
 }
 
+export function getAction() {
+  //let herfUrl = 'http://localhost:8080/scenario-test?scenarioId=bf9496ac-8577-46b4-adf9-9c7e93dd06a8&action=edit';
+  let herfUrl = window.location.href;
+  if (herfUrl.indexOf('action=') > -1) {
+    let action = '';
+    new URL(herfUrl).searchParams.forEach((value, key) => {
+      if (key === 'action') {
+        action = value;
+      }
+    });
+    return action;
+  }
+  return "";
+}
+
+export function getApiScenarioModuleId() {
+  let herfUrl = window.location.href;
+  if (herfUrl.indexOf('addScenarioModuleId=') > -1) {
+    let addScenarioModuleId = '';
+    new URL(herfUrl).searchParams.forEach((value, key) => {
+      if (key === 'addScenarioModuleId') {
+        addScenarioModuleId = value;
+      }
+    });
+    return addScenarioModuleId;
+  }
+  return "";
+}
+
 export function getCaseId() {
   let herfUrl = window.location.href;
   if (herfUrl.indexOf('caseId=') > -1) {

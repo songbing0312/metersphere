@@ -174,6 +174,11 @@ export default {
     if (projectId) {
       sessionStorage.setItem(PROJECT_ID, projectId);
     }
+    window.addEventListener("storage", e => {
+      if (e.key === "scenarioID") {
+        this.$refs.apiScenarioList.search();
+      }
+    })
   },
   mounted() {
     this.getProject();
@@ -368,15 +373,24 @@ export default {
       }
     },
     handleCommand(e) {
+      let addScenarioModuleId;
+      if (this.nodeTree && this.nodeTree.length > 0) {
+        addScenarioModuleId = this.nodeTree[0].id;
+      }
+      if (this.selectNodeIds && this.selectNodeIds.length > 0) {
+        addScenarioModuleId = this.selectNodeIds[0];
+      }
       switch (e) {
         case "ADD":
-          this.addTab({name: 'add'});
+          //this.addTab({name: 'add'});
+          window.open('/scenario-test?addScenarioModuleId='+addScenarioModuleId+'&action=add', '_blank');
           break;
         case "CLOSE_ALL":
           this.handleTabClose();
           break;
         default:
-          this.addTab({name: 'add'});
+          //this.addTab({name: 'add'});
+          window.open('/scenario-test?addScenarioModuleId='+addScenarioModuleId+'&action=add', '_blank');
           break;
       }
     },
