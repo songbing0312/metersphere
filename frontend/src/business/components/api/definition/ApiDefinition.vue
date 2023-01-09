@@ -547,6 +547,7 @@ export default {
         this.$warning(this.$t('commons.check_project_tip'));
         return;
       }
+/*
       let api = {
         status: "Underway",
         method: "GET",
@@ -571,6 +572,18 @@ export default {
         api.modulePath = this.currentModulePath;
       }
       this.handleTabsEdit(this.$t('api_test.definition.request.title'), e, api);
+      */
+
+
+      let addApiModuleId;
+      if (this.nodeTree && this.nodeTree.length > 0) {
+        addApiModuleId = this.nodeTree[0].id;
+      }
+      if (this.selectNodeIds && this.selectNodeIds.length > 0) {
+        addApiModuleId = this.selectNodeIds[0];
+      }
+
+      window.open('/apiEdit?addApiModuleId='+addApiModuleId+'&currentProtocol='+this.currentProtocol+'&action=add', '_blank');
     },
     handleTabClose() {
       let tabs = this.apiTabs[0];
@@ -747,7 +760,8 @@ export default {
           row.tags = JSON.parse(row.tags);
         }
       }
-      this.handleTabsEdit(name, "ADD", row);
+      window.open('/apiEdit?apiId='+row.id+'&action=copy', '_blank');
+      //this.handleTabsEdit(name, "ADD", row);
     },
     handleCase(api) {
       this.currentApi = api;

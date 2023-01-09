@@ -950,7 +950,7 @@ export default {
     edit(row) {
       //let data = JSON.parse(JSON.stringify(row));
       //this.$emit('edit', data);
-      window.open('/scenario-test?scenarioId='+row.id, '_blank');
+      window.open('/scenario-test?scenarioId='+row.id+'&action=edit', '_blank');
     },
     reductionApi(row) {
       this.$post("/api/automation/reduction", [row.id], response => {
@@ -1122,7 +1122,9 @@ export default {
       rowParam.copy = true;
       rowParam.name = 'copy_' + rowParam.name;
       rowParam.customNum = '';
-      this.$emit('edit', rowParam);
+      //this.$emit('edit', rowParam);
+      window.open('/scenario-test?scenarioId='+row.id+'&action=copy', '_blank');
+
     },
     showReport(row) {
       this.showReportVisible = true;

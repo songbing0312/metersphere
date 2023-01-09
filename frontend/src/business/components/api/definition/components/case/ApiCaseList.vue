@@ -65,6 +65,9 @@ export default {
   props: {
     createCase: String,
     caseId: String,
+    action: String,
+    addCaseModuleId: String,
+    apiId: String,
     loaded: {
       type: Boolean,
       default: false
@@ -111,40 +114,94 @@ export default {
   },
   created() {
     //如果是以新窗口方式，打开case编辑页面
+    if(this.action){
+      //如果是编辑或copy操作
+      if(this.action === 'edit' || this.action === 'copy'){
+        this.result = this.$get("/api/testcase/findById/" + this.caseId, response => {
+          let apiCase = response.data;
+          this.$get('/api/definition/get/' + apiCase.apiDefinitionId, (response2) => {
 
-    if(this.caseId){
-      this.result = this.$get("/api/testcase/findById/" + this.caseId, response => {
-        let apiCase = response.data;
-        this.$get('/api/definition/get/' + apiCase.apiDefinitionId, (response) => {
+            this.api = response2.data;
+            if(this.action === 'copy'){
+              let uuid = getUUID();
+              let apiCaseRequest = JSON.parse(response.data.request);
+              apiCaseRequest.id = uuid;
+
+              apiCase = {
+                name: "copy_" + response.data.name,
+                apiDefinitionId: response.data.apiDefinitionId,
+                versionId: response.data.versionId,
+                priority: response.data.priority,
+                active: true,
+                tags: response.data.tags,
+                request: apiCaseRequest,
+                url: apiCaseRequest.path,
+                uuid: uuid
+              };
+
+              this.api.id = apiCase.apiDefinitionId;
+              this.api.versionId = apiCase.versionId;
+              if (apiCase && apiCase.request) {
+                if (apiCase.request.type === "HTTPSamplerProxy") {
+                  this.api.protocol = "HTTP";
+                  this.api.source = "editCase";
+                }
+                this.api.method = apiCase.request.method
+                this.api.name = apiCase.request.name;
+                this.api.path = apiCase.request.path;
+              }
+              if (apiCase.tags) {
+                apiCase.tags = JSON.parse(apiCase.tags);
+              }
+              this.condition = {components: API_CASE_CONFIGS};
+              this.sysAddition(apiCase);
+              this.visible = true;
+            }
+
+            //以下是ApiCaseList.vue原始代码
+            if (this.createCase) {
+              this.sysAddition();
+            }
+            if (!this.environment && this.$store.state.useEnvironment) {
+              this.environment = this.$store.state.useEnvironment;
+            }
+            this.getMaintainerOptions();
+
+            if(this.action === 'edit'){
+              // testCaseId 不为空则为用例编辑页面
+              this.testCaseId = this.caseId;
+              this.condition = {components: API_CASE_CONFIGS};
+              this.getApiTest(true,true);
+              this.visible = true;
+              this.$store.state.currentApiCase = undefined;
+            }
+          });
+        });
+      }else{
+        //如果是创建接口case
+        this.$get('/api/definition/get/' + this.apiId, (response) => {
           this.api = response.data;
-          if (this.createCase) {
-            this.sysAddition();
-          }
+
+          this.sysAddition();
+
           if (!this.environment && this.$store.state.useEnvironment) {
             this.environment = this.$store.state.useEnvironment;
           }
           this.getMaintainerOptions();
-
-          // testCaseId 不为空则为用例编辑页面
-          this.testCaseId = this.caseId;
-          this.condition = {components: API_CASE_CONFIGS};
-          this.getApiTest(true,true);
-          this.visible = true;
-          this.$store.state.currentApiCase = undefined;
-
         });
-      });
-      //否则，按原来方式打开case编辑页面
-    }else {
-      this.api = this.currentApi;
+      }
+      //如果是以tab页方式，打开场景创建或编辑，或复制页面
+    }else{
+      //以下是ApiCaseList.vue原始代码，同上
+        this.api = this.currentApi;
 
-      if (this.createCase) {
-        this.sysAddition();
-      }
-      if (!this.environment && this.$store.state.useEnvironment) {
-        this.environment = this.$store.state.useEnvironment;
-      }
-      this.getMaintainerOptions();
+        if (this.createCase) {
+          this.sysAddition();
+        }
+        if (!this.environment && this.$store.state.useEnvironment) {
+          this.environment = this.$store.state.useEnvironment;
+        }
+        this.getMaintainerOptions();
     }
 
   },

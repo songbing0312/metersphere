@@ -404,6 +404,8 @@ export default {
     currentScenario: {},
     type: String,
     scenarioId: String,
+    action: String,
+    addScenarioModuleId: String,
     customNum: {
       type: Boolean,
       default: false
@@ -561,57 +563,41 @@ export default {
   },
   created() {
     //如果是以新窗口方式，打开场景编辑页面
-    if(this.scenarioId){
-      this.$get('/api/automation/getApiScenario/' + this.scenarioId, (response) => {
-        this.currentScenario = response.data;
-        this.$get('/api/automation/module/getApiScenarioModuleById/' + this.currentScenario.apiScenarioModuleId, (response2) => {
+    if(this.action){
+      //如果是编辑或copy操作
+      if(this.addScenarioModuleId.length === 0 ){
+        this.$get('/api/automation/getApiScenario/' + this.scenarioId, (response) => {
+          this.currentScenario = response.data;
+          this.$get('/api/automation/module/getApiScenarioModuleById/' + this.currentScenario.apiScenarioModuleId, (response2) => {
+            this.moduleOptions = response2.data;
+            if(this.action === 'copy'){
+              this.currentScenario.name = 'copy_' + this.currentScenario.name;
+              this.currentScenario.copy = true;
+              this.currentScenario.customNum = '';
+            }
+            //以下是EditApiScenario.vue原始代码
+            this.initScenario();
+          });
+        });
+      }else{
+        this.currentScenario = {
+          status: "Underway", principal: getCurrentUser().id,
+          apiScenarioModuleId: "default-module", id: getUUID(),
+          modulePath: "/" + this.$t("commons.module_title"),
+          level: "P0", type: "add"
+        };
+        this.$get('/api/automation/module/getApiScenarioModuleById/' + this.addScenarioModuleId, (response2) => {
           this.moduleOptions = response2.data;
+          this.currentScenario.apiScenarioModuleId = this.addScenarioModuleId;
+          //以下是EditApiScenario.vue原始代码
+          this.initScenario();
         });
-
-        //以下是EditApiScenario.vue原始代码
-        if (!this.currentScenario.apiScenarioModuleId) {
-          this.currentScenario.apiScenarioModuleId = "";
-        }
-        if (this.currentScenario.apiScenarioModuleId === 'default-module') {
-          this.currentScenario.apiScenarioModuleId = this.moduleOptions[0].id;
-        }
-        this.debug = false;
-        this.debugLoading = false;
-        if (this.stepFilter) {
-          this.operatingElements = this.stepFilter.get("ALL");
-        }
-        this.getWsProjects();
-        this.getMaintainerOptions();
-        this.getApiScenario();
-        this.buttonData = buttons(this);
-        this.getPlugins().then(() => {
-          this.initPlugins();
-        });
-      });
-      //如果是以tab页方式，打开场景编辑页面
+      }
+      //如果是以tab页方式，打开场景创建或编辑，或复制页面
     }else{
       //以下是EditApiScenario.vue原始代码，同上
-      if (!this.currentScenario.apiScenarioModuleId) {
-        this.currentScenario.apiScenarioModuleId = "";
-      }
-      if (this.currentScenario.apiScenarioModuleId === 'default-module') {
-        this.currentScenario.apiScenarioModuleId = this.moduleOptions[0].id;
-      }
-      this.debug = false;
-      this.debugLoading = false;
-      if (this.stepFilter) {
-        this.operatingElements = this.stepFilter.get("ALL");
-      }
-      this.getWsProjects();
-      this.getMaintainerOptions();
-      this.getApiScenario();
-      this.buttonData = buttons(this);
-      this.getPlugins().then(() => {
-        this.initPlugins();
-      });
+      this.initScenario();
     }
-
-
 
     if (hasLicense()) {
       this.getVersionHistory();
@@ -632,6 +618,26 @@ export default {
     }
   },
   methods: {
+    initScenario(){
+      if (!this.currentScenario.apiScenarioModuleId) {
+        this.currentScenario.apiScenarioModuleId = "";
+      }
+      if (this.currentScenario.apiScenarioModuleId === 'default-module') {
+        this.currentScenario.apiScenarioModuleId = this.moduleOptions[0].id;
+      }
+      this.debug = false;
+      this.debugLoading = false;
+      if (this.stepFilter) {
+        this.operatingElements = this.stepFilter.get("ALL");
+      }
+      this.getWsProjects();
+      this.getMaintainerOptions();
+      this.getApiScenario();
+      this.buttonData = buttons(this);
+      this.getPlugins().then(() => {
+        this.initPlugins();
+      });
+    },
     recursiveSorting(arr) {
       for (let i in arr) {
         arr[i].disabled = true;
