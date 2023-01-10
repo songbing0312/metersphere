@@ -156,6 +156,8 @@ export default {
     },
     currentApi: {},
     apiId: String,
+    action: String,
+    addApiModuleId: String,
     moduleOptions: {},
     currentProtocol: String,
     syncTabs: Array,

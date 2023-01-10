@@ -1,6 +1,8 @@
 <template>
   <edit-complete-container
     :apiId="apiId"
+    :action="action"
+    :addApiModuleId="addApiModuleId"
     :syncTabs="syncTabs"
     :current-api="currentApi"
     :project-id="projectId"
@@ -15,8 +17,11 @@
 <script>
   import EditCompleteContainer from "@/business/components/api/definition/components/EditCompleteContainer";
   import {getApiId} from "@/common/js/utils";
-
-
+  import {getAction} from "@/common/js/utils";
+  import {getApiModuleId} from "@/common/js/utils";
+  import {getCurrentUser} from "@/common/js/utils";
+  import {getCurrentProjectID} from "@/common/js/utils";
+  import {getCurrentProtocol} from "@/common/js/utils";
 
   export default {
     name: "ApiEditTemplate",
@@ -24,6 +29,8 @@
     data() {
       return {
         apiId:String,
+        action: String,
+        addApiModuleId: String,
         currentApi: {},
         projectId:String,
         currentProtocol:String,
@@ -36,18 +43,48 @@
     created() {
       //从url地址取得apiId
       this.apiId = getApiId();
+      this.action = getAction();
+      this.addApiModuleId = getApiModuleId();
 
-      this.$get('/api/definition/get/' + this.apiId, (response) => {
-        this.currentApi = response.data;
-        this.$get('/api/module/getApiModuleById/' + this.currentApi.moduleId, (response2) => {
-          this.moduleOptions = response2.data;
-          this.currentProtocol = response.data.protocol;
-          this.projectId = response.data.projectId;
-          this.activeTab = "api";
-          this.currentApi.request = JSON.parse(this.currentApi.request);
-          this.reload();
-        });
-      });
+      //如果是以新窗口方式，打开API编辑页面
+      if(this.action){
+        //如果是编辑或copy操作
+        if(this.addApiModuleId.length === 0 ){
+          this.$get('/api/definition/get/' + this.apiId, (response) => {
+            this.currentApi = response.data;
+            this.$get('/api/module/getApiModuleById/' + this.currentApi.moduleId, (response2) => {
+              this.moduleOptions = response2.data;
+              if(this.action === 'copy'){
+                this.currentApi.name = 'copy_' + this.currentApi.name;
+                this.currentApi.isCopy = true;
+              }
+
+              this.currentProtocol = response.data.protocol;
+              this.projectId = response.data.projectId;
+              this.activeTab = "api";
+              this.currentApi.request = JSON.parse(this.currentApi.request);
+              this.reload();
+            });
+          });
+        }else{
+          this.currentApi = {
+            status: "Underway",
+            method: "GET",
+            userId: getCurrentUser().id,
+            url: "",
+            environmentId: "",
+            remark: ""
+          };
+          this.$get('/api/module/getApiModuleById/' + this.addApiModuleId, (response2) => {
+            this.moduleOptions = response2.data;
+            this.currentApi.moduleId = this.addApiModuleId;
+            this.currentProtocol = getCurrentProtocol();
+            this.projectId = getCurrentProjectID();
+            this.activeTab = "api";
+            this.reload();
+          });
+        }
+      }
     },
     methods:{
       reload() {

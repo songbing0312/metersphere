@@ -542,6 +542,34 @@ export function getApiScenarioModuleId() {
   return "";
 }
 
+export function getApiModuleId() {
+  let herfUrl = window.location.href;
+  if (herfUrl.indexOf('addApiModuleId=') > -1) {
+    let addApiModuleId = '';
+    new URL(herfUrl).searchParams.forEach((value, key) => {
+      if (key === 'addApiModuleId') {
+        addApiModuleId = value;
+      }
+    });
+    return addApiModuleId;
+  }
+  return "";
+}
+
+export function getCurrentProtocol() {
+  let herfUrl = window.location.href;
+  if (herfUrl.indexOf('currentProtocol=') > -1) {
+    let currentProtocol = '';
+    new URL(herfUrl).searchParams.forEach((value, key) => {
+      if (key === 'currentProtocol') {
+        currentProtocol = value;
+      }
+    });
+    return currentProtocol;
+  }
+  return "";
+}
+
 export function getCaseId() {
   let herfUrl = window.location.href;
   if (herfUrl.indexOf('caseId=') > -1) {

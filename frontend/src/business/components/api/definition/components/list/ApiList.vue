@@ -687,7 +687,7 @@ export default {
 
     editApi(row) {
       //this.$emit('editApi', row);
-      window.open('/apiEdit?apiId='+row.id, '_blank');
+      window.open('/apiEdit?apiId='+row.id+'&action=edit', '_blank');
     },
     handleCopy(row) {
       let obj = JSON.parse(JSON.stringify(row));
