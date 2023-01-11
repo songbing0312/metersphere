@@ -48,21 +48,26 @@
 
       //如果是以新窗口方式，打开API编辑页面
       if(this.action){
-        //如果是编辑或copy操作
-        if(this.addApiModuleId.length === 0 ){
+        //如果是编辑，或copy操作，或运行操作
+        if(this.action === 'edit' || this.action === 'copy' || this.action === 'run' ){
           this.$get('/api/definition/get/' + this.apiId, (response) => {
             this.currentApi = response.data;
             this.$get('/api/module/getApiModuleById/' + this.currentApi.moduleId, (response2) => {
               this.moduleOptions = response2.data;
-              if(this.action === 'copy'){
-                this.currentApi.name = 'copy_' + this.currentApi.name;
-                this.currentApi.isCopy = true;
-              }
 
               this.currentProtocol = response.data.protocol;
               this.projectId = response.data.projectId;
               this.activeTab = "api";
               this.currentApi.request = JSON.parse(this.currentApi.request);
+
+              if(this.action === 'copy'){
+                this.currentApi.name = 'copy_' + this.currentApi.name;
+                this.currentApi.isCopy = true;
+              }
+
+              if(this.action === 'run'){
+                this.activeTab = "test";
+              }
               this.reload();
             });
           });

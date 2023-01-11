@@ -695,6 +695,7 @@ export default {
       this.$emit('copyApi', obj);
     },
     runApi(row) {
+      /*
       let request = row ? JSON.parse(row.request) : {};
       if (row.tags instanceof Array) {
         row.tags = JSON.stringify(row.tags);
@@ -726,6 +727,8 @@ export default {
       row.request = request;
       row.response = response;
       this.$emit('runTest', row);
+      */
+      window.open('/apiEdit?apiId='+row.id+'&action=run', '_blank');
     },
     reductionApi(row) {
       let tmp = JSON.parse(JSON.stringify(row));
