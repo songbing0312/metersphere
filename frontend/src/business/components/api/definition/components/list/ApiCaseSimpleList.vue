@@ -832,9 +832,10 @@ export default {
           this.$refs.caseList.open(selectApi, testCase.id);
         }
       });*/
-      window.open('/caseEdit?caseId='+testCase.id, '_blank');
+      window.open('/caseEdit?caseId='+testCase.id+'&action=edit', '_blank');
     },
     addTestCase() {
+      /*
       this.$get('/api/definition/get/' + this.apiDefinitionId, (response) => {
         let api = response.data;
         let selectApi = api;
@@ -850,8 +851,11 @@ export default {
         selectApi.url = request.path;
         this.$refs.caseList.add(selectApi);
       });
+      */
+      window.open('/caseEdit?apiId='+this.apiDefinitionId+'&action=add', '_blank');
     },
     handleCopy(row) {
+      /*
       this.$get('/api/testcase/findById/' + row.id, (response) => {
         let data = response.data;
         let uuid = getUUID();
@@ -870,6 +874,9 @@ export default {
         };
         this.$refs.caseList.copy(obj);
       });
+      */
+      window.open('/caseEdit?caseId='+row.id+'&action=copy', '_blank');
+
     },
     handleDeleteBatch() {
       this.$alert(this.$t('api_test.definition.request.delete_case_confirm') + "？", '', {

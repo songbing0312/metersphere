@@ -542,6 +542,20 @@ export function getApiScenarioModuleId() {
   return "";
 }
 
+export function getCaseModuleId() {
+  let herfUrl = window.location.href;
+  if (herfUrl.indexOf('addCaseModuleId=') > -1) {
+    let addCaseModuleId = '';
+    new URL(herfUrl).searchParams.forEach((value, key) => {
+      if (key === 'addCaseModuleId') {
+        addCaseModuleId = value;
+      }
+    });
+    return addCaseModuleId;
+  }
+  return "";
+}
+
 export function getApiModuleId() {
   let herfUrl = window.location.href;
   if (herfUrl.indexOf('addApiModuleId=') > -1) {
