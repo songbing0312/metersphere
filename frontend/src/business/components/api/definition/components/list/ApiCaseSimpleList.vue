@@ -798,6 +798,7 @@ export default {
       return path + "/" + this.currentPage + "/" + this.pageSize;
     },
     runTestCase(testCase) {
+      /*
       this.$get('/api/definition/get/' + testCase.apiDefinitionId, (response) => {
         let api = response.data;
         let selectApi = api;
@@ -813,6 +814,9 @@ export default {
         selectApi.url = request.path;
         this.$refs.caseList.runTestCase(selectApi, testCase.id);
       });
+      */
+      window.open('/caseEdit?caseId='+testCase.id+'&action=run', '_blank');
+
     },
     handleTestCase(testCase) {
       /*this.$get('/api/definition/get/' + testCase.apiDefinitionId, (response) => {

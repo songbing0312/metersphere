@@ -115,8 +115,8 @@ export default {
   created() {
     //如果是以新窗口方式，打开case编辑页面
     if(this.action){
-      //如果是编辑或copy操作
-      if(this.action === 'edit' || this.action === 'copy'){
+      //如果是编辑，或copy操作，或运行操作
+      if(this.action === 'edit' || this.action === 'copy' || this.action === 'run'){
         this.result = this.$get("/api/testcase/findById/" + this.caseId, response => {
           let apiCase = response.data;
           this.$get('/api/definition/get/' + apiCase.apiDefinitionId, (response2) => {
@@ -158,23 +158,30 @@ export default {
               this.visible = true;
             }
 
-            //以下是ApiCaseList.vue原始代码
-            if (this.createCase) {
-              this.sysAddition();
-            }
+
             if (!this.environment && this.$store.state.useEnvironment) {
               this.environment = this.$store.state.useEnvironment;
             }
             this.getMaintainerOptions();
 
-            if(this.action === 'edit'){
+            if(this.action === 'edit' || this.action === 'run'){
               // testCaseId 不为空则为用例编辑页面
               this.testCaseId = this.caseId;
               this.condition = {components: API_CASE_CONFIGS};
               this.getApiTest(true,true);
               this.visible = true;
               this.$store.state.currentApiCase = undefined;
+              if(this.action === 'run'){
+                console.log("action>>>>>>>>>>>>>>>"+this.action)
+
+                apiCase.request = JSON.parse(response.data.request);
+                apiCase.message = true;
+                this.environment = apiCase.request.useEnvironment;
+
+                this.singleRun(apiCase);
+              }
             }
+
           });
         });
       }else{
@@ -192,7 +199,7 @@ export default {
       }
       //如果是以tab页方式，打开场景创建或编辑，或复制页面
     }else{
-      //以下是ApiCaseList.vue原始代码，同上
+      //以下是ApiCaseList.vue原始代码
         this.api = this.currentApi;
 
         if (this.createCase) {
@@ -475,7 +482,11 @@ export default {
       this.singleRunId = row.id;
       row.request.name = row.id;
       row.request.useEnvironment = this.environment;
+      console.log("this.environment>>>>>>>>>>>>>>>>"+this.environment)
       row.request.projectId = this.projectId;
+      console.log("this.projectId>>>>>>>>>>>>>>>>"+this.projectId)
+      console.log("singleRun>>>>>>>>>>>>>>>row")
+      console.log(row)
       this.runData.push(row.request);
       /*触发执行操作*/
       this.reportId = getUUID().substring(0, 8);
