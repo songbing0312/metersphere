@@ -21,6 +21,10 @@ public class IndexWebSocket {
     @OnOpen
     public void openSession(@PathParam("reportId") String reportId, Session session) {
         WebSocketUtils.ONLINE_USER_SESSIONS.put(reportId, session);
+        RemoteEndpoint.Async async = session.getAsyncRemote();
+        if (async != null) {
+            async.sendText("CONN_SUCCEEDED");
+        }
         log.info("客户端: [" + reportId + "] : 连接成功！");
         //WebSocketUtils.sendMessageAll("客户端: [" + reportId + "] : 连接成功！");
     }
