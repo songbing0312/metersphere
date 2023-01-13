@@ -48,10 +48,14 @@
 <script>
 
 import ApiCaseHeader from "./ApiCaseHeader";
-import {getCurrentProjectID, getUUID} from "@/common/js/utils";
+import {getBodyUploadFiles, strMapToObj, getCurrentProjectID, getUUID} from "@/common/js/utils";
 import MsDrawer from "../../../../common/components/MsDrawer";
 import {CASE_ORDER} from "../../model/JsonData";
 import {API_CASE_CONFIGS} from "@/business/components/common/components/search/search-components";
+import TestPlan from "../jmeter/components/test-plan";
+import ThreadGroup from "../jmeter/components/thread-group";
+import {TYPE_TO_C} from "@/business/components/api/automation/scenario/Setting";
+
 
 export default {
   name: 'ApiCaseList',
@@ -97,6 +101,8 @@ export default {
       api: {},
       envMap: new Map,
       maintainerOptions: [],
+      requestResult: {responseResult: {}},
+      websocket: {}
     };
   },
   watch: {
@@ -172,12 +178,9 @@ export default {
               this.visible = true;
               this.$store.state.currentApiCase = undefined;
               if(this.action === 'run'){
-                console.log("action>>>>>>>>>>>>>>>"+this.action)
-
                 apiCase.request = JSON.parse(response.data.request);
                 apiCase.message = true;
                 this.environment = apiCase.request.useEnvironment;
-
                 this.singleRun(apiCase);
               }
             }
@@ -482,18 +485,95 @@ export default {
       this.singleRunId = row.id;
       row.request.name = row.id;
       row.request.useEnvironment = this.environment;
-      console.log("this.environment>>>>>>>>>>>>>>>>"+this.environment)
       row.request.projectId = this.projectId;
-      console.log("this.projectId>>>>>>>>>>>>>>>>"+this.projectId)
-      console.log("singleRun>>>>>>>>>>>>>>>row")
-      console.log(row)
       this.runData.push(row.request);
+
       /*触发执行操作*/
       this.reportId = getUUID().substring(0, 8);
       this.testCaseId = row.id ? row.id : row.request.id;
+      if(this.action === 'run') {
+        let protocol = "ws://";
+        const uri = protocol + window.location.host + "/ws/" + this.reportId;
+        this.websocket = new WebSocket(uri);
+        this.websocket.onmessage = this.onDebugMessage;
+      }
       this.$emit("refreshCase", this.testCaseId);
     },
+    onDebugMessage(e) {
+      // 确认连接建立成功，开始执行
+      if (e && e.data === "CONN_SUCCEEDED") {
+        this.run();
+      }
+    },
+    run() {
+      let testPlan = new TestPlan();
+      testPlan.clazzName = TYPE_TO_C.get(testPlan.type);
+      let threadGroup = new ThreadGroup();
+      threadGroup.clazzName = TYPE_TO_C.get(threadGroup.type);
+      threadGroup.hashTree = [];
+      testPlan.hashTree = [threadGroup];
+      this.runData.forEach(item => {
+        item.projectId = this.projectId;
+        if (!item.clazzName) {
+          item.clazzName = TYPE_TO_C.get(item.type);
+        }
+        threadGroup.hashTree.push(item);
+      })
+      this.sort(testPlan.hashTree);
+      this.requestResult.reportId = this.reportId;
+      let reqObj = {id: this.reportId, testElement: testPlan, type: this.type, clazzName: this.clazzName ? this.clazzName : TYPE_TO_C.get(this.type), projectId: this.projectId, environmentMap: strMapToObj(this.envMap)};
+      let bodyFiles = getBodyUploadFiles(reqObj, this.runData);
+      if (this.runData[0].url) {
+        reqObj.name = this.runData[0].url;
+      } else {
+        reqObj.name = this.runData[0].path;
+      }
+      let url = "/api/definition/run";
+      this.initWebSocket();
 
+      this.$fileUpload(url, null, bodyFiles, reqObj, response => {
+        this.requestResult = response.data;
+        this.$emit('autoCheckStatus');  //   执行结束后，自动更新计划状态
+      }, error => {
+        this.$emit('errorRefresh', {});
+      });
+    },
+    initWebSocket() {
+      let protocol = "ws://";
+      let runMode = "run";
+      const uri = protocol + window.location.host + "/api/definition/run/report/" + this.requestResult.reportId + "/" + runMode;
+      this.websocket = new WebSocket(uri);
+      this.websocket.onmessage = this.onRunMessage;
+    },
+    onRunMessage(e) {
+      if (e.data) {
+        let data = JSON.parse(e.data);
+        this.websocket.close();
+        //this.$emit('runRefresh', data);
+        this.runRefresh();
+      }
+    },
+    sort(stepArray) {
+      if (stepArray) {
+        for (let i in stepArray) {
+          if (!stepArray[i].clazzName) {
+            stepArray[i].clazzName = TYPE_TO_C.get(stepArray[i].type);
+          }
+          if (stepArray[i].type === "Assertions" && !stepArray[i].document) {
+            stepArray[i].document = {
+              type: "JSON",
+              data: {xmlFollowAPI: false, jsonFollowAPI: false, json: [], xml: []}
+            };
+          }
+          if (stepArray[i] && stepArray[i].authManager && !stepArray[i].authManager.clazzName) {
+            stepArray[i].authManager.clazzName = TYPE_TO_C.get(stepArray[i].authManager.type);
+          }
+          if (stepArray[i].hashTree && stepArray[i].hashTree.length > 0) {
+            this.sort(stepArray[i].hashTree);
+          }
+        }
+      }
+    },
     stop(id) {
       let obj = {type: "API", reportId: this.reportId};
       this.$post('/api/automation/stop/batch', [obj], response => {
