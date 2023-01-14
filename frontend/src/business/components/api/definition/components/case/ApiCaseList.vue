@@ -95,6 +95,7 @@ export default {
       reportId: "",
       testCaseId: "",
       visible: false,
+      runFlag: false,
       condition: {
         components: API_CASE_CONFIGS
       },
@@ -491,7 +492,8 @@ export default {
       /*触发执行操作*/
       this.reportId = getUUID().substring(0, 8);
       this.testCaseId = row.id ? row.id : row.request.id;
-      if(this.action === 'run') {
+      if(this.action === 'run' && !this.runFlag) {
+        this.runFlag = true;
         let protocol = "ws://";
         const uri = protocol + window.location.host + "/ws/" + this.reportId;
         this.websocket = new WebSocket(uri);
