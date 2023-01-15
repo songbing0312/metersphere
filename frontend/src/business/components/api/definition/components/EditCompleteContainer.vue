@@ -273,7 +273,17 @@ export default {
       this.$emit("createRootModel");
     },
     editApi(data) {
-      this.$emit("editApi", data);
+      this.showApiList = true;
+      this.showTestCaseList = false;
+      this.showTest = false;
+      this.showMock = false;
+      this.currentApi = data;
+      this.currentApi.isCopy = true;
+      this.currentApi.request = JSON.parse(this.currentApi.request);
+      console.log("EditCompleteContainer>>>>>>>>>>>>>moduleOptions")
+      console.log(this.moduleOptions);
+      this.$refs.apiConfig.open();
+      //this.$emit("editApi", data);
     },
     refresh() {
       this.$emit("refresh");
