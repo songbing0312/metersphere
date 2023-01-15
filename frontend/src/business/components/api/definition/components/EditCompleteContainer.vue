@@ -280,8 +280,6 @@ export default {
       this.currentApi = data;
       this.currentApi.isCopy = true;
       this.currentApi.request = JSON.parse(this.currentApi.request);
-      console.log("EditCompleteContainer>>>>>>>>>>>>>moduleOptions")
-      console.log(this.moduleOptions);
       this.$refs.apiConfig.open();
       //this.$emit("editApi", data);
     },

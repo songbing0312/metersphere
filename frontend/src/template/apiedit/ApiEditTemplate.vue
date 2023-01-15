@@ -52,7 +52,7 @@
         if(this.action === 'edit' || this.action === 'copy' || this.action === 'run' ){
           this.$get('/api/definition/get/' + this.apiId, (response) => {
             this.currentApi = response.data;
-            this.$get('/api/module/getApiModuleById/' + this.currentApi.moduleId, (response2) => {
+            this.$get("/api/module/list/" + getCurrentProjectID() + "/" + response.data.protocol, (response2) => {
               this.moduleOptions = response2.data;
 
               this.currentProtocol = response.data.protocol;

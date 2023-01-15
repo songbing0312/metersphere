@@ -568,7 +568,7 @@ export default {
       if(this.addScenarioModuleId.length === 0 ){
         this.$get('/api/automation/getApiScenario/' + this.scenarioId, (response) => {
           this.currentScenario = response.data;
-          this.$get('/api/automation/module/getApiScenarioModuleById/' + this.currentScenario.apiScenarioModuleId, (response2) => {
+          this.$get("/api/automation/module/list/" + getCurrentProjectID(), (response2) => {
             this.moduleOptions = response2.data;
             if(this.action === 'copy'){
               this.currentScenario.name = 'copy_' + this.currentScenario.name;
