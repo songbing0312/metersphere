@@ -49,7 +49,7 @@
       //如果是以新窗口方式，打开API编辑页面
       if(this.action){
         //如果是编辑，或copy操作，或运行操作
-        if(this.action === 'edit' || this.action === 'copy' || this.action === 'run' ){
+        if(this.action === 'edit' || this.action === 'copy' || this.action === 'run' || this.action === 'testcase' ){
           this.$get('/api/definition/get/' + this.apiId, (response) => {
             this.currentApi = response.data;
             this.$get("/api/module/list/" + getCurrentProjectID() + "/" + response.data.protocol, (response2) => {
@@ -67,6 +67,9 @@
 
               if(this.action === 'run'){
                 this.activeTab = "test";
+              }
+              if(this.action === 'testcase'){
+                this.activeTab = "testCase";
               }
               this.reload();
             });

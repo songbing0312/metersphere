@@ -818,7 +818,8 @@ export default {
       });
     },
     handleTestCase(api) {
-      this.$emit("handleTestCase", api);
+      //this.$emit("handleTestCase", api);
+      window.open('/apiEdit?apiId='+api.id+'&action=testcase', '_blank');
       // this.$refs.caseList.open(this.selectApi);
     },
     handleDelete(api) {
