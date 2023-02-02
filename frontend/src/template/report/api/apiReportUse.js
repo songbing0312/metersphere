@@ -13,6 +13,9 @@ import store from "../../../store";
 import VueFab from 'vue-float-action-button'
 import router from "../../../business/components/common/router/router";
 import JsonSchemaEditor from '../../../business/components/common/json-schema/schema/editor/index'
+import mavonEditor from 'mavon-editor'
+
+
 
 
 
@@ -22,6 +25,7 @@ function apiReportUse(id, template) {
   });
 
   Vue.use(VueFab);
+  Vue.use(mavonEditor);
   Vue.use(JsonSchemaEditor);
   Vue.use(Row);
   Vue.use(Col);
