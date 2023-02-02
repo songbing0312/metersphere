@@ -277,7 +277,9 @@ export default {
         this.$emit('saveApi', data);
         setTimeout(function () {
           localStorage.setItem("apiID", new Date().getMilliseconds());
-          window.close();
+          if(data.isSaveButton){
+            window.close();
+          }
         }, 500);
       });
       this.$store.state.apiMap.delete(this.currentApi.id);

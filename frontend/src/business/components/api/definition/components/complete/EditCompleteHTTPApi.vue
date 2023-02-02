@@ -24,7 +24,7 @@
                               :version-data="versionData"
                               :current-id="httpForm.id"
                               @compare="compare" @checkout="checkout" @create="create" @del="del"/>
-          <el-button type="primary" size="small" @click="saveApi" title="ctrl + s"
+          <el-button type="primary" size="small" @click="saveApi($event)" title="ctrl + s"
                      v-permission="['PROJECT_API_DEFINITION:READ+EDIT_API']">{{ $t('commons.save') }}
           </el-button>
         </div>
@@ -453,7 +453,7 @@ export default {
         this.httpForm.tags = JSON.stringify(this.httpForm.tags);
       }
     },
-    saveApi() {
+    saveApi(e) {
       this.$refs['httpForm'].validate((valid) => {
         if (valid) {
           this.setParameter();
@@ -461,6 +461,11 @@ export default {
           if (!this.httpForm.versionId) {
             if (this.$refs.versionHistory && this.$refs.versionHistory.currentVersion) {
               this.httpForm.versionId = this.$refs.versionHistory.currentVersion.id;
+            }
+          }
+          if(e){
+            if(e.type === "click"){
+              this.httpForm.isSaveButton = true;
             }
           }
           this.$emit('saveApi', this.httpForm);
