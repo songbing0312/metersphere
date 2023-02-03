@@ -9,6 +9,8 @@
   import {getScenarioId} from "@/common/js/utils";
   import {getAction} from "@/common/js/utils";
   import {getApiScenarioModuleId} from "@/common/js/utils";
+  import {registerRequestHeaders} from "@/common/js/ajax";
+
 
   export default {
   name: "ApiScenarioTemplate",
@@ -22,6 +24,9 @@
       addScenarioModuleId: String,
       moduleOptions: [],
     };
+  },
+  beforeCreate() {
+    registerRequestHeaders();
   },
   created() {
     //从url地址取得scenarioId，并传递给EditApiScenario页面

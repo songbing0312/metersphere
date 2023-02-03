@@ -16,62 +16,8 @@ public class ShiroUtils {
     public static void loadBaseFilterChain(Map<String, String> filterChainDefinitionMap) {
 
         filterChainDefinitionMap.put("/scenario-test", "anon");
-        filterChainDefinitionMap.put("/api/automation/get/*", "anon");
-        filterChainDefinitionMap.put("/user/project/member/tester/list", "anon");
-        filterChainDefinitionMap.put("/project/getOwnerProjects", "anon");
-        filterChainDefinitionMap.put("/plugin/list", "anon");
-        filterChainDefinitionMap.put("/environment/group/get/all", "anon");
-        filterChainDefinitionMap.put("/environment/group/get/option", "anon");
-        filterChainDefinitionMap.put("/workspace/list/userworkspace/*", "anon");
-        filterChainDefinitionMap.put("/api/automation/getApiScenario/*", "anon");
-        filterChainDefinitionMap.put("/api/automation/follow/*", "anon");
-        filterChainDefinitionMap.put("/api/environment/get/*", "anon");
-        filterChainDefinitionMap.put("/api/environment/list/*", "anon");
-        filterChainDefinitionMap.put("/api/automation/*", "anon");
-        filterChainDefinitionMap.put("/api/automation/versions/*", "anon");
-        filterChainDefinitionMap.put("/project/getOwnerProjectIds/", "anon");
-        filterChainDefinitionMap.put("/api/definition/run/debug", "anon");
-        filterChainDefinitionMap.put("/task/center/scenario/*", "anon");
-        filterChainDefinitionMap.put("/api/automation/run/debug", "anon");
-        filterChainDefinitionMap.put("/api/automation/module/getApiScenarioModuleById/*", "anon");
-        filterChainDefinitionMap.put("/api/automation/update", "anon");
-        filterChainDefinitionMap.put("/project/list/related", "anon");
-        filterChainDefinitionMap.put("/api/definition/list/**", "anon");
-        filterChainDefinitionMap.put("/api/module/list/**", "anon");
-        filterChainDefinitionMap.put("/api/testcase/list/**", "anon");
-        filterChainDefinitionMap.put("/api/testcase/get/caseBLOBs/request", "anon");
-        filterChainDefinitionMap.put("/api/automation/module/list/*", "anon");
-        filterChainDefinitionMap.put("/project_application/get/config/**", "anon");
-        filterChainDefinitionMap.put("/custom/func/list/**", "anon");
-        filterChainDefinitionMap.put("/api/automation/list/**", "anon");
-        filterChainDefinitionMap.put("/project/get/**", "anon");
-        filterChainDefinitionMap.put("/api/module/getUserDefaultApiType", "anon");
-
-
         filterChainDefinitionMap.put("/caseEdit", "anon");
-        filterChainDefinitionMap.put("/api/definition/get/**", "anon");
-        filterChainDefinitionMap.put("/api/testcase/findById/**", "anon");
-        filterChainDefinitionMap.put("/api/testcase/follow/**", "anon");
-        filterChainDefinitionMap.put("/api/definition/report/getReport/**", "anon");
-        filterChainDefinitionMap.put("/api/testcase/update", "anon");
-        filterChainDefinitionMap.put("/api/testcase/create", "anon");
-        filterChainDefinitionMap.put("/api/definition/run", "anon");
-        filterChainDefinitionMap.put("/api/testcase/batch/editByParam", "anon");
-        filterChainDefinitionMap.put("/task/center/case/**", "anon");
-        filterChainDefinitionMap.put("/api/genPerformanceTestXml", "anon");
-
-
         filterChainDefinitionMap.put("/apiEdit", "anon");
-        filterChainDefinitionMap.put("/mockConfig/genMockConfig", "anon");
-        filterChainDefinitionMap.put("/api/definition/follow/**", "anon");
-        filterChainDefinitionMap.put("/api/definition/relationship/count/**", "anon");
-        filterChainDefinitionMap.put("/api/definition/update", "anon");
-        filterChainDefinitionMap.put("/api/definition/create", "anon");
-        filterChainDefinitionMap.put("/api/module/getApiModuleById/**", "anon");
-        filterChainDefinitionMap.put("/api/definition/getMockEnvironment/**", "anon");
-        filterChainDefinitionMap.put("/api/environment/getTcpMockInfo/**", "anon");
-        filterChainDefinitionMap.put("/api/testcase/checkDeleteDatas/", "anon");
-        filterChainDefinitionMap.put("/api/testcase/deleteToGc/**", "anon");
 
 
 

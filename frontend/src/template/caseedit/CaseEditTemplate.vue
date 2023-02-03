@@ -9,6 +9,8 @@ import {getCaseId} from "@/common/js/utils";
 import {getAction} from "@/common/js/utils";
 import {getCaseModuleId} from "@/common/js/utils";
 import {getApiId} from "@/common/js/utils";
+import {registerRequestHeaders} from "@/common/js/ajax";
+
 
 
 
@@ -21,6 +23,9 @@ export default {
       selectCase: {},
       caseId: String,
     };
+  },
+  beforeCreate() {
+    registerRequestHeaders();
   },
   created() {
     //从url地址取得caseId，并传递给ApiCaseList页面

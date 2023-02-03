@@ -22,6 +22,8 @@
   import {getCurrentUser} from "@/common/js/utils";
   import {getCurrentProjectID} from "@/common/js/utils";
   import {getCurrentProtocol} from "@/common/js/utils";
+  import {registerRequestHeaders} from "@/common/js/ajax";
+
 
   export default {
     name: "ApiEditTemplate",
@@ -39,6 +41,9 @@
         activeTab: String,
         isShow:true
       };
+    },
+    beforeCreate() {
+      registerRequestHeaders();
     },
     created() {
       //从url地址取得apiId
