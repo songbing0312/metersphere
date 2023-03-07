@@ -568,6 +568,9 @@ export default {
       if(this.addScenarioModuleId.length === 0 ){
         this.$get('/api/automation/getApiScenario/' + this.scenarioId, (response) => {
           this.currentScenario = response.data;
+          if(response.data.tags != ''){
+            this.currentScenario.tags = JSON.parse(response.data.tags)
+          }
           this.$get("/api/automation/module/list/" + getCurrentProjectID(), (response2) => {
             this.moduleOptions = response2.data;
             if(this.action === 'copy'){
